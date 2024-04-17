@@ -1,0 +1,50 @@
+<%- include("header.ejs", {title}) %>
+    <%- include("error.ejs", {messages}) %>
+        <div class="flex items-center justify-center h-screen">
+            <form action="/add_attendence" method="post" class="bg-white shadow-md rounded-md p-8">
+                <label for="attendenceDate" class="block mb-2 font-bold">Enter the Date Of Class</label>
+                <input type="date" name="attendenceDate" id="attendenceDate"
+                    class="w-full border rounded-md px-3 py-2 mb-4" placeholder="Enter the Date Of Class">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <!-- Table Header -->
+                    <thead>
+                        <tr>
+                            <th scope="col"
+                                class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Student Name</th>
+                            <th scope="col"
+                                class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Enrollment No.</th>
+                            <th scope="col"
+                                class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Attendance</th>
+                            <th scope="col"
+                                class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Mark Attendance</th>
+                        </tr>
+                    </thead>
+                    <!-- Table Body -->
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        <!-- Student Rows -->
+                        <% students.forEach(function(student) { %>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <%= student.StudentName %>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <%= student.Student_enroll %>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <%= student.attendence %>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-blue-400 hover:text-blue-600">
+                                    <input type="radio" name="status_<%= student.Student_enroll %>" value="Present">Present</input>
+                                    <input type="radio" name="status_<%= student.Student_enroll %>" value="Absent">Absent</input>
+                                </td>                                
+                            </tr>
+                            <% }); %>
+                    </tbody>
+                </table>
+                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">Upload Attendence</button>
+            </form>
+        </div>

@@ -1,0 +1,26 @@
+{
+  "name": "jspn",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon js, ejs",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "connect-flash": "^0.1.1",
+    "ejs": "^3.1.9",
+    "express": "^4.19.2",
+    "express-session": "^1.18.0",
+    "flash": "^1.1.0",
+    "json2xls": "^0.1.2",
+    "mysql2": "^3.9.4",
+    "nodemon": "^3.1.0",
+    "sequelize": "^6.37.2",
+    "sequelize-cli": "^6.6.2",
+    "sequence": "^3.0.0"
+  }
+}

@@ -1,0 +1,11 @@
+<%- include("header.ejs", {title}) %>
+<%- include("error.ejs", {messages}) %>
+<div class="flex items-center justify-center h-screen">
+    <form action="/Student_Data" method="post" class="bg-white shadow-md rounded-md p-8">
+      <label for="studentEnroll" class="block mb-2 font-bold">Student Enroll</label>
+      <input type="text" name="studentEnroll" id="studentEnroll" class="w-full border rounded-md px-3 py-2 mb-4" placeholder="Enter Student Enroll">
+      <label for="studentName" class="block mb-2 font-bold">Student Name</label>
+      <input type="text" name="studentName" id="studentName" class="w-full border rounded-md px-3 py-2 mb-4" placeholder="Enter Student Name">
+      <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">Add Student</button>
+    </form>
+  </div>
