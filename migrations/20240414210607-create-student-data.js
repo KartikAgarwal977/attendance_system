@@ -11,7 +11,7 @@ module.exports = {
       },
       Student_enroll: {
         type: Sequelize.STRING,
-        unique: true
+        unique: false
       },
       StudentName: {
         type: Sequelize.STRING
@@ -19,6 +19,9 @@ module.exports = {
       attendence: {
         type: Sequelize.INTEGER,
         defaultValue:0
+      },
+      userId: {
+        type: Sequelize.INTEGER,
       },
       createdAt: {
         allowNull: false,

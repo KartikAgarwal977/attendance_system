@@ -28,8 +28,12 @@ app.use(bodyParser.json())
 app.use(express.urlencoded({ extended: false }))
 app.get("/", async (request, res) => {
     console.log(request.session.user)
-    const student = await StudentData.findAll();
     if (request.session.user) {
+        const student = await StudentData.findAll({
+            where:{
+                userId: request.session.user.id
+            }
+        });
         if (request.accepts("html")) {
             res.render("index", {student})
         }
@@ -150,11 +154,25 @@ app.post("/Student_Data", async (req, res) => {
         req.flash("error", "Name is required");
         return res.redirect("/");
     }
-    
     try {
+        const existingStudent = await StudentData.findOne({
+            where: {
+                Student_enroll: req.body.studentEnroll,
+                userId: req.session.user.id
+            }
+        });
+    
+        // If a student with the same enrollment number exists, display an error
+        if (existingStudent) {
+            req.flash("error", "Student with this enrollment already exists");
+            return res.redirect("/add_student");
+        }
+        
+        var user = req.session.user.id;
         const student = await StudentData.create({
             Student_enroll: req.body.studentEnroll,
             StudentName: req.body.studentName,
+            userId: user
         });
         
         req.flash("success", "Student added successfully");
@@ -171,7 +189,7 @@ app.post("/Student_Data", async (req, res) => {
         console.error(error);
         req.flash("error", "Failed to add student");
         console.log("failed")
-        return res.redirect("/");
+        return res.redirect("/add_student");
     }
 });
 app.get("/add_attendence", async (req, res) => {
