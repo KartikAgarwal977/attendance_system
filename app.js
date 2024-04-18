@@ -1,12 +1,13 @@
 const express = require("express")
 const app = express()
+const path = require("path");
 const { user, StudentData, AttendanceRecord } = require("./models")
 app.set("view engine", "ejs")
 const session = require("express-session")
 const bodyParser = require("body-parser")
 const flash = require("connect-flash")
 const { where } = require("sequelize")
-const updateExcelFile = require('./src/ExcelUpdate');
+const updateCSVFile = require('./src/ExcelUpdate');
 app.use(
     session({
       secret: "there_is_a_secret_977",
@@ -17,25 +18,27 @@ app.use(
       saveUninitialized: true,
     })
   );
+app.use(express.static(path.join(__dirname, "public")));
 app.use(flash())
 app.use(function (req, res, next) {
     res.locals.messages = req.flash();
     next();
 })
-setInterval(updateExcelFile, 3600000);
-updateExcelFile()
+setInterval(updateCSVFile, 3600000);
 app.use(bodyParser.json())
 app.use(express.urlencoded({ extended: false }))
 app.get("/", async (request, res) => {
     console.log(request.session.user)
     if (request.session.user) {
+        updateCSVFile(request.session.user.id)
         const student = await StudentData.findAll({
             where:{
                 userId: request.session.user.id
             }
         });
         if (request.accepts("html")) {
-            res.render("index", {student})
+            res.render("index", {student,
+            userId: request.session.user.id})
         }
     }
     else{
@@ -176,7 +179,7 @@ app.post("/Student_Data", async (req, res) => {
         });
         
         req.flash("success", "Student added successfully");
-        updateExcelFile();
+        updateCSVFile();
         console.log("success")
         return res.redirect("/");
     } catch (error) {
@@ -194,7 +197,13 @@ app.post("/Student_Data", async (req, res) => {
 });
 app.get("/add_attendence", async (req, res) => {
     if (req.session.user) {
-    const students = await StudentData.findAll()
+    const students = await StudentData.findAll(
+        {
+            where:{
+                userId: req.session.user.id
+            }
+        }
+    )
     res.render("addAttendence", {
         title : "Add Attendence",
         students
@@ -232,7 +241,9 @@ app.post("/add_attendence", async (req, res) => {
             if (attendanceStatus === "Present") {
                 await StudentData.update(
                     { attendence: student.attendence + 1 }, // Increment attendance
-                    { where: { Student_enroll: student.Student_enroll } }
+                    { where: { Student_enroll: student.Student_enroll, 
+                            userId: req.session.user.id 
+                    }}
                 );
             }
         }
